@@ -39,28 +39,26 @@ class FTClient():
       return self._post(urllib.urlencode({'sql': query}))
 
 
-class ClientLoginFTClient(FTClient):
+class KeyFTClient(FTClient):
 
-  def __init__(self, token):
-    self.auth_token = token
-    self.request_url = "https://www.google.com/fusiontables/api/query"
+  def __init__(self, key, useCvs = False):
+    self.key = key
+    self.request_url = "https://www.googleapis.com/fusiontables/v1/query"
+    self.csv = "alt=csv" if useCsv else ""
 
   def _get(self, query):
-    headers = {
-      'Authorization': 'GoogleLogin auth=' + self.auth_token,
-    }
-    serv_req = urllib2.Request(url="%s?%s" % (self.request_url, query),
+    headers = {}
+    serv_req = urllib2.Request(url="%s?%s&key=%s%s" % (self.request_url, query, self.key, self.csv),
                                headers=headers)
     serv_resp = urllib2.urlopen(serv_req)
     return serv_resp.read()
 
   def _post(self, query):
     headers = {
-      'Authorization': 'GoogleLogin auth=' + self.auth_token,
       'Content-Type': 'application/x-www-form-urlencoded',
     }
 
-    serv_req = urllib2.Request(url=self.request_url, data=query, headers=headers)
+    serv_req = urllib2.Request(url="%s?key=%s%s" % (self.request_url, self.key, self.csv), data=query, headers=headers)
     serv_resp = urllib2.urlopen(serv_req)
     return serv_resp.read()
 
