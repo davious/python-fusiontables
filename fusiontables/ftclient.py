@@ -72,7 +72,7 @@ class OAuthFTClient(FTClient):
     self.consumer_secret = consumer_secret
     self.token = oauth2.Token(oauth_token, oauth_token_secret)
     
-    self.scope = "https://www.google.com/fusiontables/api/query"
+    self.scope = "https://www.googleapis.com/fusiontables/v1/query"
 
 
   def _get(self, query):
