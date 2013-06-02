@@ -74,25 +74,17 @@ class OAuthFTClient(FTClient):
     self.consumer_secret = consumer_secret
     self.token = oauth2.Token(oauth_token, oauth_token_secret)
     self.csv = "&alt=csv" if useCsv else ""
-    
     self.scope = "https://www.googleapis.com/fusiontables/v1/query"
 
-
   def _get(self, query):
-    consumer = oauth2.Consumer(self.consumer_key, self.consumer_secret)
-    client = oauth2.Client(consumer, self.token)
-    resp, content = client.request(uri="%s?%s%s" % (self.scope, query, self.csv),
-                         method="GET")
+	  resp, content = self.client.request(uri="%s?%s%s" % (self.scope, query, self.csv), method="GET")
+    if resp['status'] != '200': raise Exception("%s %s" % (resp['status'], content))
     return content
-
-
+	
   def _post(self, query):
-    consumer = oauth2.Consumer(self.consumer_key, self.consumer_secret)
-    client = oauth2.Client(consumer, self.token)
-    resp, content = client.request(uri=self.scope + self.csv.replace("&", "?"),
-                                   method="POST",
-                                   body=query)
-    return content
+    resp, content = self.client.request(uri="%s?%s%s" % (self.scope, query, self.csv), method="POST", body=query)
+	    if resp['status'] != '200': raise Exception("%s %s" % (resp['status'], content))
+	    return content
 
 
   
