@@ -1,26 +1,40 @@
 '''
-Created on Dec 22, 2010
+Created on June 2, 2013
 
-@author: kbrisbin
+@author: davious
 '''
 
-from fusiontables.authorization.oauth import OAuth
-from fusiontables.sql.sqlbuilder import SQL
-from fusiontables import ftclient
-from fusiontables.fileimport.fileimporter import CSVImporter
+import httplib2
+import os
+# easy_install --upgrade google-api-python-client
+import apiclient
+from oauth2client.client import OAuth2WebServerFlow
+from oauth2client.file import Storage
 
 
 if __name__ == "__main__":
   import sys, getpass
-  consumer_key = sys.argv[1]
-  consumer_secret = getpass.getpass("Enter your secret: ")
+  client_id = sys.argv[1]
+  redirect_uri = sys.argv[2]
+  client_secret = getpass.getpass("Enter your secret: ")
+  # https://developers.google.com/api-client-library/python/guide/aaa_oauth#storage
+  flow = OAuth2WebServerFlow(client_id=client_id,
+                           client_secret=client_secret,
+                           scope='https://www.googleapis.com/auth/fusiontables',
+                           redirect_uri=redirect_uri)
+  storage = Storage(os.path.expanduser("~/oauth_storage.json"))
+  credentials = storage.get()
+  if not credentials:
+    auth_uri = flow.step1_get_authorize_url()
+    print "Visit this URL in a browser: ", auth_uri
+    code = raw_input("Enter code appended to the redirect url: ")
+    credentials = flow.step2_exchange(code)
+	  storage.put(credentials)
   
-  url, token, secret = OAuth().generateAuthorizationURL(consumer_key, consumer_secret, consumer_key)
-  print "Visit this URL in a browser: ", url
-  raw_input("Hit enter after authorization")
-  
-  token, secret = OAuth().authorize(consumer_key, consumer_secret, token, secret)
-  oauth_client = ftclient.OAuthFTClient(consumer_key, consumer_secret, token, secret)
+	http = httplib2.Http()
+	http.disable_ssl_certificate_validation = True
+	http = credentials.authorize(http)
+	oauth_client = OAuthFTClient(http, True)
 
   #show tables
   results = oauth_client.query(SQL().showTables())
