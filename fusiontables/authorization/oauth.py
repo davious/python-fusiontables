@@ -20,12 +20,12 @@ import oauth2
 import urllib
 
 OAUTH_SETTINGS = {
-  'scope' : "https://www.googleapis.com/fusiontables/v1/query",
-  'request_token_url':"https://www.google.com/accounts/OAuthGetRequestToken",
-  'authorize_url':'https://www.google.com/accounts/OAuthAuthorizeToken',
-  'access_token_url':'https://www.google.com/accounts/OAuthGetAccessToken',
+  'scope' : "https://www.googleapis.com/auth/fusiontables",
+  'request_token_url':"https://accounts.google.com/o/oauth2/auth",
+  'authorize_url':'https://accounts.google.com/o/oauth2/auth',
+  'access_token_url':'https://www.google.com/fusiontables/api/query',
 }
-
+  
 class OAuth():
 
   def generateAuthorizationURL(self, consumer_key, consumer_secret, domain, callback_url=None):
