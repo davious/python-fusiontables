@@ -29,12 +29,12 @@ if __name__ == "__main__":
     print "Visit this URL in a browser: ", auth_uri
     code = raw_input("Enter code appended to the redirect url: ")
     credentials = flow.step2_exchange(code)
-	  storage.put(credentials)
-  
-	http = httplib2.Http()
-	http.disable_ssl_certificate_validation = True
-	http = credentials.authorize(http)
-	oauth_client = OAuthFTClient(http, True)
+    storage.put(credentials)
+
+  http = httplib2.Http()
+  http.disable_ssl_certificate_validation = True
+  http = credentials.authorize(http)
+  oauth_client = OAuthFTClient(http, True)
 
   #show tables
   results = oauth_client.query(SQL().showTables())
