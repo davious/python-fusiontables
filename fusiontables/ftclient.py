@@ -69,10 +69,8 @@ class KeyFTClient(FTClient):
 
 class OAuthFTClient(FTClient):
 
-  def __init__(self, consumer_key, consumer_secret, oauth_token, oauth_token_secret, useCvs = False):
-    self.consumer_key = consumer_key
-    self.consumer_secret = consumer_secret
-    self.token = oauth2.Token(oauth_token, oauth_token_secret)
+  def __init__(self, auth_http_client, useCsv = False):
+    self.client = auth_http_client
     self.csv = "&alt=csv" if useCsv else ""
     self.scope = "https://www.googleapis.com/fusiontables/v1/query"
 
