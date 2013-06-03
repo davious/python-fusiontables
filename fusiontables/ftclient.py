@@ -75,14 +75,14 @@ class OAuthFTClient(FTClient):
     self.scope = "https://www.googleapis.com/fusiontables/v1/query"
 
   def _get(self, query):
-	  resp, content = self.client.request(uri="%s?%s%s" % (self.scope, query, self.csv), method="GET")
+    resp, content = self.client.request(uri="%s?%s%s" % (self.scope, query, self.csv), method="GET")
     if resp['status'] != '200': raise Exception("%s %s" % (resp['status'], content))
     return content
 	
   def _post(self, query):
     resp, content = self.client.request(uri="%s?%s%s" % (self.scope, query, self.csv), method="POST", body=query)
-	    if resp['status'] != '200': raise Exception("%s %s" % (resp['status'], content))
-	    return content
+    if resp['status'] != '200': raise Exception("%s %s" % (resp['status'], content))
+    return content
 
 
   
